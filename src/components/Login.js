@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { loginConstants } from "../utils/constants";
+import { emailPasswordValidation } from "../utils/validation";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const inputEmailRef = useRef(null);
+  const inputPasswordRef = useRef(null);
   const toggleSignIn = () => {
     setIsSignInForm(!isSignInForm);
   };
@@ -18,6 +22,14 @@ const Login = () => {
       : loginConstants.sign_in_message;
   };
 
+  const onSubmitHandler = () => {
+    const validationMessage = emailPasswordValidation(
+      inputEmailRef.current.value,
+      inputPasswordRef.current.value
+    );
+
+    setErrorMessage(validationMessage);
+  };
   return (
     <div>
       <Header />
@@ -28,7 +40,10 @@ const Login = () => {
           alt="bgImage"
         />
       </div>
-      <form className="w-1/4 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="w-1/4 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80"
+      >
         <h1 className="font-bold text-3xl py-4">{getTitle()}</h1>
         {!isSignInForm && (
           <input
@@ -42,13 +57,19 @@ const Login = () => {
           type="text"
           placeholder="Email address"
           className="p-4 my-4 w-full bg-gray-700"
+          ref={inputEmailRef}
         />
         <input
+          ref={inputPasswordRef}
           type="password"
           placeholder="Password"
           className="p-4 my-4 w-full  bg-gray-700"
         />
-        <button className="p-4 my-6 w-full bg-red-700 rounded-lg">
+        <p className="text-red-800">{errorMessage}</p>
+        <button
+          onClick={onSubmitHandler}
+          className="p-4 my-6 w-full bg-red-700 rounded-lg"
+        >
           {getTitle()}
         </button>
         <p className="cursor-pointer" onClick={toggleSignIn}>

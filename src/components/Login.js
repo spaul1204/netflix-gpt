@@ -27,8 +27,8 @@ const Login = () => {
       inputEmailRef.current.value,
       inputPasswordRef.current.value
     );
-
     setErrorMessage(validationMessage);
+    
   };
   return (
     <div>

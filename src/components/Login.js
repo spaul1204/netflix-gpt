@@ -2,6 +2,11 @@ import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { loginConstants } from "../utils/constants";
 import { emailPasswordValidation } from "../utils/validation";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -28,7 +33,47 @@ const Login = () => {
       inputPasswordRef.current.value
     );
     setErrorMessage(validationMessage);
-    
+    if (validationMessage) return;
+
+    //sign up/in new users
+
+    if (!isSignInForm) {
+      //sign up user
+      createUserWithEmailAndPassword(
+        auth,
+        inputEmailRef.current.value,
+        inputPasswordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log("user signed up ", user);
+        })
+        .catch((error) => {
+          console.log("err is ", error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorMessage);
+        });
+    } else {
+      //sign in user
+      signInWithEmailAndPassword(
+        auth,
+        inputEmailRef.current.value,
+        inputPasswordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("Signed in user ", user);
+        })
+        .catch((error) => {
+          console.log(error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorMessage);
+        });
+    }
   };
   return (
     <div>

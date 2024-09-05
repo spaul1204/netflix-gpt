@@ -5,16 +5,22 @@ import { emailPasswordValidation } from "../utils/validation";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const name = useRef(null);
   const inputEmailRef = useRef(null);
   const inputPasswordRef = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const toggleSignIn = () => {
     setIsSignInForm(!isSignInForm);
   };
@@ -41,6 +47,7 @@ const Login = () => {
 
     if (!isSignInForm) {
       //sign up user
+      console.log("name val ", name.current.value);
       createUserWithEmailAndPassword(
         auth,
         inputEmailRef.current.value,
@@ -49,8 +56,20 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL:
+              "https://cms.interiorcompany.com/wp-content/uploads/2024/01/lotus-beautiful-flowers.jpg",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(addUser({ uid, email, displayName, photoURL }));
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
           console.log("user signed up ", user);
-          navigate("/");
+          navigate("/browse");
         })
         .catch((error) => {
           console.log("err is ", error);
@@ -68,7 +87,7 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/browse");
+          navigate("/");
           console.log("Signed in user ", user);
         })
         .catch((error) => {
@@ -99,6 +118,7 @@ const Login = () => {
             type="text"
             placeholder="Full Name"
             className="p-4 my-4 w-full bg-gray-700"
+            ref={name}
           />
         )}
 

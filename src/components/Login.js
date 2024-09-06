@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
-import { loginConstants } from "../utils/constants";
+import { loginConstants, PHOTO_URL } from "../utils/constants";
 import { emailPasswordValidation } from "../utils/validation";
 import {
   createUserWithEmailAndPassword,
@@ -8,7 +8,6 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
@@ -19,7 +18,6 @@ const Login = () => {
   const name = useRef(null);
   const inputEmailRef = useRef(null);
   const inputPasswordRef = useRef(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleSignIn = () => {
     setIsSignInForm(!isSignInForm);
@@ -47,7 +45,6 @@ const Login = () => {
 
     if (!isSignInForm) {
       //sign up user
-      console.log("name val ", name.current.value);
       createUserWithEmailAndPassword(
         auth,
         inputEmailRef.current.value,
@@ -58,8 +55,7 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL:
-              "https://cms.interiorcompany.com/wp-content/uploads/2024/01/lotus-beautiful-flowers.jpg",
+            photoURL: PHOTO_URL,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -68,17 +64,15 @@ const Login = () => {
             .catch((error) => {
               setErrorMessage(error.message);
             });
-          console.log("user signed up ", user);
-          navigate("/browse");
+          // console.log("user signed up ", user);
         })
         .catch((error) => {
-          console.log("err is ", error);
-          const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorMessage);
         });
     } else {
       //sign in user
+
       signInWithEmailAndPassword(
         auth,
         inputEmailRef.current.value,
@@ -87,12 +81,10 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/");
-          console.log("Signed in user ", user);
+          console.log("user signed in ", user);
         })
         .catch((error) => {
           console.log(error);
-          const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorMessage);
         });

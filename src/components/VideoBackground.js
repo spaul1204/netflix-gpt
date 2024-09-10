@@ -1,32 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { API_OPTIONS } from "../utils/constants";
-import { useDispatch, useSelector } from "react-redux";
-import { addMovieTrailer } from "../utils/moviesSlice";
+import useMovieTrailer from "../hooks/useMovieTrailer";
+import { useSelector } from "react-redux";
 
 const VideoBackground = ({ movieId }) => {
-  const dispatch = useDispatch();
+  useMovieTrailer(movieId);
   const movieTrailer = useSelector((store) => store.movies?.trailer);
-  useEffect(() => {
-    getMovieVideoDetails();
-  }, []);
-
-  const getMovieVideoDetails = async () => {
-    const videoDetails = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`,
-      API_OPTIONS
-    );
-    const videoDetailsJson = await videoDetails.json();
-    console.log("video details ", videoDetailsJson);
-    const filteredMovieData = videoDetailsJson.results.filter(
-      (eachVideo) => eachVideo.type === "Trailer"
-    );
-    const movieTrailer = filteredMovieData.length
-      ? filteredMovieData[0]
-      : videoDetailsJson.results[0];
-    console.log("movie trailer ", movieTrailer);
-    dispatch(addMovieTrailer(movieTrailer));
-  };
 
   return (
     <div>

@@ -64,7 +64,6 @@ const Login = () => {
             .catch((error) => {
               setErrorMessage(error.message);
             });
-          // console.log("user signed up ", user);
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -81,7 +80,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log("user signed in ", user);
         })
         .catch((error) => {
           console.log(error);

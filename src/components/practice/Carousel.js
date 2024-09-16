@@ -23,8 +23,7 @@ const Carousel = () => {
       setActiveImage(activeImage + 1);
     }
   };
-  console.log("active image ", activeImage);
-  console.log("image ", images[activeImage]);
+
   return (
     <div className="flex align-middle justify-between ">
       <button onClick={previousBtnHandler}>Previous</button>

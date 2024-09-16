@@ -14,8 +14,7 @@ export const API_OPTIONS = {
   method: "GET",
   headers: {
     accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZTlkOWE3MzY5YTBjNDczZWQ2MzE3MDg3OTI4N2UzYSIsIm5iZiI6MTcyNTgxMzIxOS44NzM0NTEsInN1YiI6IjY2ZGQ3M2M5NDdiNTQ2ZTM2ODc4NzkxZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.E9EJ3cjR0ynw--QeCLfT6fkK6uIRRU_mmSx6pjuFj2o",
+    Authorization: "Bearer " + process.env.REACT_APP_TMDB_AUTH_KEY,
   },
 };
 export const IMG_BG_URL =
@@ -36,3 +35,5 @@ export const SUPPORTED_LANGUAGES = [
     identifier: "spanish",
   },
 ];
+
+export const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY;
